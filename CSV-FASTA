@@ -1,0 +1,42 @@
+!pip install biopython
+#csv to FASTA
+import csv
+from Bio import SeqIO
+
+def fasta_to_csv(fasta_file, csv_file):
+    with open(csv_file, 'w', newline='') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(['ID', 'Sequence'])
+        
+        for record in SeqIO.parse(fasta_file, "fasta"):
+            csvwriter.writerow([record.id, str(record.seq)])
+
+# Example usage
+fasta_file = 'path/to/your/input.fasta'
+csv_file = 'path/to/your/output.csv'
+fasta_to_csv(fasta_file, csv_file)
+
+
+#FASTA to csv
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+from Bio import SeqIO
+import csv
+
+def csv_to_fasta(csv_file, fasta_file):
+    records = []
+    with open(csv_file, 'r') as csvfile:
+        csvreader = csv.reader(csvfile)
+        next(csvreader)  # Skip header
+        for row in csvreader:
+            record_id, sequence = row
+            record = SeqRecord(Seq(sequence), id=record_id, description="")
+            records.append(record)
+    
+    with open(fasta_file, 'w') as fastafile:
+        SeqIO.write(records, fastafile, "fasta")
+
+# Example usage
+csv_file = 'path/to/your/input.csv'
+fasta_file = 'path/to/your/output.fasta'
+csv_to_fasta(csv_file, fasta_file)
